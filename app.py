@@ -34,9 +34,9 @@ def parse_syllables(syllable_input):
 
 # Function to format text with double slashes
 def format_with_slashes(text):
-    if text.startswith("//") and text.endswith("//"):
+    if text.startswith("/") and text.endswith("/"):
         return text  # If already has slashes, return as is
-    return f"//{text}//"  # Otherwise, add slashes
+    return f"/{text}/"  # Otherwise, add slashes
 
 # Function to create a syllable tree with Onset, Rhyme, Nucleus, and Coda
 def create_syllable_tree(syllable_data, syllable_number):
