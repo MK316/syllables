@@ -15,7 +15,7 @@ def parse_syllables(syllable_input):
         parsed_syllables.append({"Onset": onset, "Nucleus": nucleus, "Coda": coda})
     return parsed_syllables
 
-# Function to create a syllable tree
+# Function to create a syllable tree with Rhyme
 def create_syllable_tree(syllable_data):
     graph = graphviz.Digraph(format="png")
     graph.node("Syllable", "Syllable", shape="circle")
@@ -24,13 +24,17 @@ def create_syllable_tree(syllable_data):
         graph.node("Onset", f"Onset: {syllable_data['Onset']}", shape="ellipse")
         graph.edge("Syllable", "Onset")
     
-    if syllable_data["Nucleus"]:
-        graph.node("Nucleus", f"Nucleus: {syllable_data['Nucleus']}", shape="ellipse")
-        graph.edge("Syllable", "Nucleus")
-    
-    if syllable_data["Coda"]:
-        graph.node("Coda", f"Coda: {syllable_data['Coda']}", shape="ellipse")
-        graph.edge("Syllable", "Coda")
+    if syllable_data["Nucleus"] or syllable_data["Coda"]:
+        graph.node("Rhyme", "Rhyme", shape="circle")
+        graph.edge("Syllable", "Rhyme")
+        
+        if syllable_data["Nucleus"]:
+            graph.node("Nucleus", f"Nucleus: {syllable_data['Nucleus']}", shape="ellipse")
+            graph.edge("Rhyme", "Nucleus")
+        
+        if syllable_data["Coda"]:
+            graph.node("Coda", f"Coda: {syllable_data['Coda']}", shape="ellipse")
+            graph.edge("Rhyme", "Coda")
     
     return graph
 
@@ -55,9 +59,9 @@ if st.button("Generate Tree"):
         syllables = parse_syllables(syllable_input)
         
         for i, syl in enumerate(syllables, start=1):
-            st.markdown(f"### Syllable {i}")
-            tree = create_syllable_tree(syl)
-            # Display the tree using Streamlit's Graphviz chart
-            st.graphviz_chart(tree)
+            if syl["Onset"] or syl["Nucleus"] or syl["Coda"]:  # Only show valid syllables
+                st.markdown(f"### Syllable {i}")
+                tree = create_syllable_tree(syl)
+                st.graphviz_chart(tree)
     else:
         st.error("Please enter a valid syllabified input.")
