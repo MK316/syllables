@@ -40,40 +40,89 @@ def create_syllable_tree(syllable_data, syllable_number):
     # Create syllable node with a colored fill (orange for stress, white otherwise)
     graph.node(
         f"Syllable{syllable_number}",
-        "Syllable",
+        "",
         shape="ellipse",
         style="filled",
         fillcolor=syllable_color,
         fontcolor="black",
-        color="lightgray"
+        color="lightgray",
+        xlabel="Syllable"
     )
 
     # Onset Node
     if syllable_data.get("Onset"):
-        graph.node(f"Onset{syllable_number}", f"Onset: {syllable_data['Onset']}", shape="ellipse", style="filled", fillcolor="white", color="lightgray")
+        graph.node(
+            f"Onset{syllable_number}",
+            "",
+            shape="ellipse",
+            style="filled",
+            fillcolor="white",
+            color="lightgray",
+            xlabel=f"Onset: {syllable_data['Onset']}"
+        )
         graph.edge(f"Syllable{syllable_number}", f"Onset{syllable_number}", arrowhead="none")
 
     # Rhyme Node
     if syllable_data.get("Syllabic"):  # Syllabic consonant
-        graph.node(f"Rhyme{syllable_number}", "Rhyme", shape="ellipse", style="filled", fillcolor="white", color="lightgray")
+        graph.node(
+            f"Rhyme{syllable_number}",
+            "",
+            shape="ellipse",
+            style="filled",
+            fillcolor="white",
+            color="lightgray",
+            xlabel="Rhyme"
+        )
         graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
         
         # Single node for Nucleus and Coda (shared)
-        graph.node(f"Nucleus_Coda{syllable_number}", f"Nucleus/Coda: {syllable_data['Nucleus_Coda']}", shape="ellipse", style="filled", fillcolor="white", color="lightgray")
+        graph.node(
+            f"Nucleus_Coda{syllable_number}",
+            "",
+            shape="ellipse",
+            style="filled",
+            fillcolor="white",
+            color="lightgray",
+            xlabel=f"Nucleus/Coda: {syllable_data['Nucleus_Coda']}"
+        )
         graph.edge(f"Rhyme{syllable_number}", f"Nucleus_Coda{syllable_number}", arrowhead="none")
     else:
         if syllable_data.get("Nucleus") or syllable_data.get("Coda"):
-            graph.node(f"Rhyme{syllable_number}", "Rhyme", shape="ellipse", style="filled", fillcolor="white", color="lightgray")
+            graph.node(
+                f"Rhyme{syllable_number}",
+                "",
+                shape="ellipse",
+                style="filled",
+                fillcolor="white",
+                color="lightgray",
+                xlabel="Rhyme"
+            )
             graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
             
             # Nucleus Node
             if syllable_data.get("Nucleus"):
-                graph.node(f"Nucleus{syllable_number}", f"Nucleus: {syllable_data['Nucleus']}", shape="ellipse", style="filled", fillcolor="white", color="lightgray")
+                graph.node(
+                    f"Nucleus{syllable_number}",
+                    "",
+                    shape="ellipse",
+                    style="filled",
+                    fillcolor="white",
+                    color="lightgray",
+                    xlabel=f"Nucleus: {syllable_data['Nucleus']}"
+                )
                 graph.edge(f"Rhyme{syllable_number}", f"Nucleus{syllable_number}", arrowhead="none")
             
             # Coda Node
             if syllable_data.get("Coda"):
-                graph.node(f"Coda{syllable_number}", f"Coda: {syllable_data['Coda']}", shape="ellipse", style="filled", fillcolor="white", color="lightgray")
+                graph.node(
+                    f"Coda{syllable_number}",
+                    "",
+                    shape="ellipse",
+                    style="filled",
+                    fillcolor="white",
+                    color="lightgray",
+                    xlabel=f"Coda: {syllable_data['Coda']}"
+                )
                 graph.edge(f"Rhyme{syllable_number}", f"Coda{syllable_number}", arrowhead="none")
 
     return graph
