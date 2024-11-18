@@ -130,7 +130,7 @@ def create_syllable_tree(syllable_data, syllable_number):
 st.title("🌳 Syllable Structure Visualizer")
 
 st.markdown("""
-### Instructions:
+### 🔳 Instructions:
 1. Enter a syllabified word or phrase.
 2. Use:
    - `.` for syllable boundaries.
