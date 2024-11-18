@@ -6,63 +6,68 @@ def parse_syllables(syllable_input):
     syllables = syllable_input.split(".")  # Split syllables by `.`
     parsed_syllables = []
     for syllable in syllables:
+        is_stressed = syllable.startswith("ˈ")  # Check for stress marker
+        if is_stressed:
+            syllable = syllable[1:]  # Remove stress marker for processing
         if "//" in syllable:  # Handle syllabic consonants
             parts = syllable.split("//")
             if len(parts) == 3:  # Onset, Syllabic Consonant (Nucleus + Coda)
                 onset, nucleus_coda = parts[0], parts[1]
-                parsed_syllables.append({"Onset": onset, "Nucleus_Coda": nucleus_coda, "Syllabic": True})
+                parsed_syllables.append({"Onset": onset, "Nucleus_Coda": nucleus_coda, "Syllabic": True, "Stress": is_stressed})
             elif len(parts) == 2:  # No onset, only Syllabic Consonant
                 nucleus_coda = parts[1]
-                parsed_syllables.append({"Onset": "", "Nucleus_Coda": nucleus_coda, "Syllabic": True})
+                parsed_syllables.append({"Onset": "", "Nucleus_Coda": nucleus_coda, "Syllabic": True, "Stress": is_stressed})
         elif "/" in syllable:  # Handle regular vowels
             parts = syllable.split("/")
             if len(parts) == 3:  # Onset, Nucleus, Coda
                 onset, nucleus, coda = parts[0], parts[1], parts[2]
-                parsed_syllables.append({"Onset": onset, "Nucleus": nucleus, "Coda": coda, "Syllabic": False})
+                parsed_syllables.append({"Onset": onset, "Nucleus": nucleus, "Coda": coda, "Syllabic": False, "Stress": is_stressed})
             elif len(parts) == 2:  # Only Onset and Nucleus or Nucleus and Coda
                 onset, nucleus, coda = parts[0], parts[1], ""
-                parsed_syllables.append({"Onset": onset, "Nucleus": nucleus, "Coda": coda, "Syllabic": False})
+                parsed_syllables.append({"Onset": onset, "Nucleus": nucleus, "Coda": coda, "Syllabic": False, "Stress": is_stressed})
             else:  # Only Nucleus
                 onset, nucleus, coda = "", parts[1], ""
-                parsed_syllables.append({"Onset": onset, "Nucleus": nucleus, "Coda": coda, "Syllabic": False})
+                parsed_syllables.append({"Onset": onset, "Nucleus": nucleus, "Coda": coda, "Syllabic": False, "Stress": is_stressed})
         else:
-            parsed_syllables.append({"Onset": "", "Nucleus": "", "Coda": "", "Syllabic": False})
+            parsed_syllables.append({"Onset": "", "Nucleus": "", "Coda": "", "Syllabic": False, "Stress": is_stressed})
     return parsed_syllables
 
 # Function to create a syllable tree with Onset, Rhyme, Nucleus, and Coda
-def create_syllable_tree(syllable_data):
+def create_syllable_tree(syllable_data, syllable_number):
     graph = graphviz.Digraph(format="png")
-    graph.node("Syllable", "Syllable", shape="ellipse")
-    
+    syllable_color = "orange" if syllable_data.get("Stress") else "black"  # Highlight stressed syllables
+
+    graph.node(f"Syllable{syllable_number}", "Syllable", shape="ellipse", color=syllable_color, fontcolor=syllable_color)
+
     # Onset Node
     if syllable_data.get("Onset"):
-        graph.node("Onset", f"Onset: {syllable_data['Onset']}", shape="ellipse")
-        graph.edge("Syllable", "Onset")
-    
+        graph.node(f"Onset{syllable_number}", f"Onset: {syllable_data['Onset']}", shape="ellipse")
+        graph.edge(f"Syllable{syllable_number}", f"Onset{syllable_number}", arrowhead="none")
+
     # Rhyme Node
     if syllable_data.get("Syllabic"):  # Syllabic consonant
-        graph.node("Rhyme", "Rhyme", shape="ellipse")
-        graph.edge("Syllable", "Rhyme")
+        graph.node(f"Rhyme{syllable_number}", "Rhyme", shape="ellipse")
+        graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
         
         # Single node for Nucleus and Coda (shared)
-        graph.node("Nucleus_Coda", f"Nucleus/Coda: {syllable_data['Nucleus_Coda']}", shape="ellipse")
-        graph.edge("Rhyme", "Nucleus_Coda")
-        graph.edge("Rhyme", "Nucleus_Coda")
+        graph.node(f"Nucleus_Coda{syllable_number}", f"Nucleus/Coda: {syllable_data['Nucleus_Coda']}", shape="ellipse")
+        graph.edge(f"Rhyme{syllable_number}", f"Nucleus_Coda{syllable_number}", arrowhead="none")
+        graph.edge(f"Rhyme{syllable_number}", f"Nucleus_Coda{syllable_number}", arrowhead="none")
     else:
         if syllable_data.get("Nucleus") or syllable_data.get("Coda"):
-            graph.node("Rhyme", "Rhyme", shape="ellipse")
-            graph.edge("Syllable", "Rhyme")
+            graph.node(f"Rhyme{syllable_number}", "Rhyme", shape="ellipse")
+            graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
             
             # Nucleus Node
             if syllable_data.get("Nucleus"):
-                graph.node("Nucleus", f"Nucleus: {syllable_data['Nucleus']}", shape="ellipse")
-                graph.edge("Rhyme", "Nucleus")
+                graph.node(f"Nucleus{syllable_number}", f"Nucleus: {syllable_data['Nucleus']}", shape="ellipse")
+                graph.edge(f"Rhyme{syllable_number}", f"Nucleus{syllable_number}", arrowhead="none")
             
             # Coda Node
             if syllable_data.get("Coda"):
-                graph.node("Coda", f"Coda: {syllable_data['Coda']}", shape="ellipse")
-                graph.edge("Rhyme", "Coda")
-    
+                graph.node(f"Coda{syllable_number}", f"Coda: {syllable_data['Coda']}", shape="ellipse")
+                graph.edge(f"Rhyme{syllable_number}", f"Coda{syllable_number}", arrowhead="none")
+
     return graph
 
 # Streamlit App
@@ -75,11 +80,12 @@ st.markdown("""
    - `.` for syllable boundaries.
    - `/` to mark **both sides** of the nucleus.
    - `//` to mark **syllabic consonants** (e.g., `//n//`).
-3. Example: `str/ɛ/.ŋ/θ/.//n//`
+   - `ˈ` before a syllable to mark **stress**.
+3. Example: `ˈstr/ɛ/.ŋ/θ/.//n//`
 """)
 
 # Input box
-syllable_input = st.text_input("Enter syllabified text:", placeholder="e.g., str/ɛ/.ŋ/θ/.//n//")
+syllable_input = st.text_input("Enter syllabified text:", placeholder="e.g., ˈstr/ɛ/.ŋ/θ/.//n//")
 
 # Generate button
 if st.button("Generate Tree"):
@@ -89,7 +95,7 @@ if st.button("Generate Tree"):
         for i, syl in enumerate(syllables, start=1):
             if syl.get("Onset") or syl.get("Nucleus") or syl.get("Coda") or syl.get("Nucleus_Coda"):
                 st.markdown(f"### Syllable {i}")
-                tree = create_syllable_tree(syl)
+                tree = create_syllable_tree(syl, i)
                 st.graphviz_chart(tree)
     else:
         st.error("Please enter a valid syllabified input.")
