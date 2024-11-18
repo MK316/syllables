@@ -32,6 +32,12 @@ def parse_syllables(syllable_input):
             parsed_syllables.append({"Onset": "", "Nucleus": "", "Coda": "", "Syllabic": False, "Stress": is_stressed})
     return parsed_syllables
 
+# Function to format text with double slashes
+def format_with_slashes(text):
+    if text.startswith("//") and text.endswith("//"):
+        return text  # If already has slashes, return as is
+    return f"//{text}//"  # Otherwise, add slashes
+
 # Function to create a syllable tree with Onset, Rhyme, Nucleus, and Coda
 def create_syllable_tree(syllable_data, syllable_number):
     graph = graphviz.Digraph(format="png")
@@ -52,7 +58,7 @@ def create_syllable_tree(syllable_data, syllable_number):
     if syllable_data.get("Onset"):
         graph.node(
             f"Onset{syllable_number}",
-            label=f"Onset\n//{syllable_data['Onset']}//",
+            label=f"Onset\n{format_with_slashes(syllable_data['Onset'])}",
             shape="ellipse",
             style="filled",
             fillcolor="white",
@@ -75,7 +81,7 @@ def create_syllable_tree(syllable_data, syllable_number):
         # Single node for Nucleus and Coda (shared)
         graph.node(
             f"Nucleus_Coda{syllable_number}",
-            label=f"Nucleus/Coda\n//{syllable_data['Nucleus_Coda']}//",
+            label=f"Nucleus/Coda\n{format_with_slashes(syllable_data['Nucleus_Coda'])}",
             shape="ellipse",
             style="filled",
             fillcolor="white",
@@ -98,7 +104,7 @@ def create_syllable_tree(syllable_data, syllable_number):
             if syllable_data.get("Nucleus"):
                 graph.node(
                     f"Nucleus{syllable_number}",
-                    label=f"Nucleus\n//{syllable_data['Nucleus']}//",
+                    label=f"Nucleus\n{format_with_slashes(syllable_data['Nucleus'])}",
                     shape="ellipse",
                     style="filled",
                     fillcolor="white",
@@ -110,7 +116,7 @@ def create_syllable_tree(syllable_data, syllable_number):
             if syllable_data.get("Coda"):
                 graph.node(
                     f"Coda{syllable_number}",
-                    label=f"Coda\n//{syllable_data['Coda']}//",
+                    label=f"Coda\n{format_with_slashes(syllable_data['Coda'])}",
                     shape="ellipse",
                     style="filled",
                     fillcolor="white",
