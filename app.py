@@ -15,17 +15,17 @@ def parse_syllables(syllable_input):
         parsed_syllables.append({"Onset": onset, "Nucleus": nucleus, "Coda": coda})
     return parsed_syllables
 
-# Function to create a syllable tree with Rhyme
+# Function to create a syllable tree with Onset, Rhyme, Nucleus, and Coda
 def create_syllable_tree(syllable_data):
     graph = graphviz.Digraph(format="png")
-    graph.node("Syllable", "Syllable", shape="circle")
+    graph.node("Syllable", "Syllable", shape="ellipse")
     
     if syllable_data["Onset"]:
         graph.node("Onset", f"Onset: {syllable_data['Onset']}", shape="ellipse")
         graph.edge("Syllable", "Onset")
     
     if syllable_data["Nucleus"] or syllable_data["Coda"]:
-        graph.node("Rhyme", "Rhyme", shape="circle")
+        graph.node("Rhyme", "Rhyme", shape="ellipse")
         graph.edge("Syllable", "Rhyme")
         
         if syllable_data["Nucleus"]:
@@ -47,11 +47,11 @@ st.markdown("""
 2. Use:
    - `.` for syllable boundaries.
    - `/` to mark the nucleus.
-3. Example: `str/e.ng/th.en`
+3. Example: `str/ɛ.ŋ/θ.en`
 """)
 
 # Input box
-syllable_input = st.text_input("Enter syllabified text:", placeholder="e.g., str/e.ng/th.en")
+syllable_input = st.text_input("Enter syllabified text:", placeholder="e.g., str/ɛ.ŋ/θ.en")
 
 # Generate button
 if st.button("Generate Tree"):
