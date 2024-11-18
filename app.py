@@ -51,7 +51,9 @@ def create_syllable_tree(syllable_data, syllable_number):
         style="filled",
         fillcolor=syllable_color,
         fontcolor="black",
-        color="lightgray"
+        color="lightgray",
+        fontsize="12",  # Set font size
+        fontname="Arial"  # Set font style
     )
 
     # Onset Node
@@ -62,7 +64,9 @@ def create_syllable_tree(syllable_data, syllable_number):
             shape="ellipse",
             style="filled",
             fillcolor="white",
-            color="lightgray"
+            color="lightgray",
+            fontsize="10",  # Set font size
+            fontname="Courier"  # Set font style
         )
         graph.edge(f"Syllable{syllable_number}", f"Onset{syllable_number}", arrowhead="none")
 
@@ -74,7 +78,9 @@ def create_syllable_tree(syllable_data, syllable_number):
             shape="ellipse",
             style="filled",
             fillcolor="white",
-            color="lightgray"
+            color="lightgray",
+            fontsize="10",  # Set font size
+            fontname="Courier"  # Set font style
         )
         graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
         
@@ -85,7 +91,9 @@ def create_syllable_tree(syllable_data, syllable_number):
             shape="ellipse",
             style="filled",
             fillcolor="white",
-            color="lightgray"
+            color="lightgray",
+            fontsize="10",  # Set font size
+            fontname="Courier"  # Set font style
         )
         graph.edge(f"Rhyme{syllable_number}", f"Nucleus_Coda{syllable_number}", arrowhead="none")
     else:
@@ -96,7 +104,9 @@ def create_syllable_tree(syllable_data, syllable_number):
                 shape="ellipse",
                 style="filled",
                 fillcolor="white",
-                color="lightgray"
+                color="lightgray",
+                fontsize="10",  # Set font size
+                fontname="Courier"  # Set font style
             )
             graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
             
@@ -108,7 +118,9 @@ def create_syllable_tree(syllable_data, syllable_number):
                     shape="ellipse",
                     style="filled",
                     fillcolor="white",
-                    color="lightgray"
+                    color="lightgray",
+                    fontsize="10",  # Set font size
+                    fontname="Courier"  # Set font style
                 )
                 graph.edge(f"Rhyme{syllable_number}", f"Nucleus{syllable_number}", arrowhead="none")
             
@@ -120,7 +132,9 @@ def create_syllable_tree(syllable_data, syllable_number):
                     shape="ellipse",
                     style="filled",
                     fillcolor="white",
-                    color="lightgray"
+                    color="lightgray",
+                    fontsize="10",  # Set font size
+                    fontname="Courier"  # Set font style
                 )
                 graph.edge(f"Rhyme{syllable_number}", f"Coda{syllable_number}", arrowhead="none")
 
