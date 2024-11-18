@@ -119,8 +119,8 @@ def create_syllable_tree(syllable_data, syllable_number):
                     style="filled",
                     fillcolor="white",
                     color="lightgray",
-                    fontsize="10",  # Set font size
-                    fontname="Courier"  # Set font style
+                    fontsize="14",  # Set font size
+                    fontname="Times New Roman"  # Set font style
                 )
                 graph.edge(f"Rhyme{syllable_number}", f"Nucleus{syllable_number}", arrowhead="none")
             
