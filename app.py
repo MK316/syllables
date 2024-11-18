@@ -1,5 +1,6 @@
 import streamlit as st
 import graphviz
+import os
 
 # Function to parse syllable input
 def parse_syllables(syllable_input):
@@ -40,7 +41,7 @@ def format_with_slashes(text):
 
 # Function to create a syllable tree with Onset, Rhyme, Nucleus, and Coda
 def create_syllable_tree(syllable_data, syllable_number):
-    graph = graphviz.Digraph(format="png")
+    graph = graphviz.Digraph(format="svg")
     syllable_color = "orange" if syllable_data.get("Stress") else "white"  # Highlight stressed syllables
 
     # Create syllable node
@@ -52,8 +53,8 @@ def create_syllable_tree(syllable_data, syllable_number):
         fillcolor=syllable_color,
         fontcolor="black",
         color="lightgray",
-        fontsize="14",  # Set font size
-        fontname="Arial"  # Set font style
+        fontsize="16",  # Adjust font size
+        fontname="Helvetica"  # Adjust font style
     )
 
     # Onset Node
@@ -65,8 +66,8 @@ def create_syllable_tree(syllable_data, syllable_number):
             style="filled",
             fillcolor="white",
             color="lightgray",
-            fontsize="14",  # Set font size
-            fontname="Courier"  # Set font style
+            fontsize="14",  # Adjust font size
+            fontname="Courier"  # Adjust font style
         )
         graph.edge(f"Syllable{syllable_number}", f"Onset{syllable_number}", arrowhead="none")
 
@@ -79,8 +80,8 @@ def create_syllable_tree(syllable_data, syllable_number):
             style="filled",
             fillcolor="white",
             color="lightgray",
-            fontsize="14",  # Set font size
-            fontname="Courier"  # Set font style
+            fontsize="14",  # Adjust font size
+            fontname="Courier"  # Adjust font style
         )
         graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
         
@@ -92,8 +93,8 @@ def create_syllable_tree(syllable_data, syllable_number):
             style="filled",
             fillcolor="white",
             color="lightgray",
-            fontsize="14",  # Set font size
-            fontname="Courier"  # Set font style
+            fontsize="14",  # Adjust font size
+            fontname="Courier"  # Adjust font style
         )
         graph.edge(f"Rhyme{syllable_number}", f"Nucleus_Coda{syllable_number}", arrowhead="none")
     else:
@@ -105,8 +106,8 @@ def create_syllable_tree(syllable_data, syllable_number):
                 style="filled",
                 fillcolor="white",
                 color="lightgray",
-                fontsize="14",  # Set font size
-                fontname="Courier"  # Set font style
+                fontsize="14",  # Adjust font size
+                fontname="Courier"  # Adjust font style
             )
             graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
             
@@ -119,8 +120,8 @@ def create_syllable_tree(syllable_data, syllable_number):
                     style="filled",
                     fillcolor="white",
                     color="lightgray",
-                    fontsize="14",  # Set font size
-                    fontname="Times New Roman"  # Set font style
+                    fontsize="14",  # Adjust font size
+                    fontname="Courier"  # Adjust font style
                 )
                 graph.edge(f"Rhyme{syllable_number}", f"Nucleus{syllable_number}", arrowhead="none")
             
@@ -133,8 +134,8 @@ def create_syllable_tree(syllable_data, syllable_number):
                     style="filled",
                     fillcolor="white",
                     color="lightgray",
-                    fontsize="14",  # Set font size
-                    fontname="Courier"  # Set font style
+                    fontsize="14",  # Adjust font size
+                    fontname="Courier"  # Adjust font style
                 )
                 graph.edge(f"Rhyme{syllable_number}", f"Coda{syllable_number}", arrowhead="none")
 
@@ -166,6 +167,8 @@ if st.button("Generate Tree"):
             if syl.get("Onset") or syl.get("Nucleus") or syl.get("Coda") or syl.get("Nucleus_Coda"):
                 st.markdown(f"### Syllable {i}")
                 tree = create_syllable_tree(syl, i)
-                st.graphviz_chart(tree)
+                filename = f"syllable_tree_{i}.svg"
+                tree.render(filename, format="svg", cleanup=True)
+                st.image(filename)
     else:
         st.error("Please enter a valid syllabified input.")
