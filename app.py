@@ -16,7 +16,7 @@ def parse_syllables(syllable_input):
                 parsed_syllables.append({"Onset": onset, "Nucleus_Coda": nucleus_coda, "Syllabic": True, "Stress": is_stressed})
             elif len(parts) == 2:  # No onset, only Syllabic Consonant
                 nucleus_coda = parts[1]
-                parsed_syllables.append({"Onset": "", "Nucleus_Coda": nucleus_coda, "Syllabic": True, "Stress": is_stressed})
+                parsed_syllables.append({"Onset": \n"", "Nucleus_Coda": nucleus_coda, "Syllabic": True, "Stress": is_stressed})
         elif "/" in syllable:  # Handle regular vowels
             parts = syllable.split("/")
             if len(parts) == 3:  # Onset, Nucleus, Coda
