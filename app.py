@@ -132,7 +132,6 @@ st.title("🌳 Syllable Structure Visualizer")
 st.markdown("""
 ### 🔳 Instructions:
 1. Enter a word using IPA symbols ([Visit IPA online website](https://ipa.typeit.org/))
-""")
 
 2. Use:
    - `.` for syllable boundaries.
