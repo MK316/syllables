@@ -52,12 +52,11 @@ def create_syllable_tree(syllable_data, syllable_number):
     if syllable_data.get("Onset"):
         graph.node(
             f"Onset{syllable_number}",
-            "Onset",
+            label=f"Onset\n({syllable_data['Onset']})",
             shape="ellipse",
             style="filled",
             fillcolor="white",
-            color="lightgray",
-            xlabel=syllable_data["Onset"]  # Place the text outside the node
+            color="lightgray"
         )
         graph.edge(f"Syllable{syllable_number}", f"Onset{syllable_number}", arrowhead="none")
 
@@ -76,12 +75,11 @@ def create_syllable_tree(syllable_data, syllable_number):
         # Single node for Nucleus and Coda (shared)
         graph.node(
             f"Nucleus_Coda{syllable_number}",
-            "Nucleus/Coda",
+            label=f"Nucleus/Coda\n({syllable_data['Nucleus_Coda']})",
             shape="ellipse",
             style="filled",
             fillcolor="white",
-            color="lightgray",
-            xlabel=syllable_data["Nucleus_Coda"]
+            color="lightgray"
         )
         graph.edge(f"Rhyme{syllable_number}", f"Nucleus_Coda{syllable_number}", arrowhead="none")
     else:
@@ -100,12 +98,11 @@ def create_syllable_tree(syllable_data, syllable_number):
             if syllable_data.get("Nucleus"):
                 graph.node(
                     f"Nucleus{syllable_number}",
-                    "Nucleus",
+                    label=f"Nucleus\n({syllable_data['Nucleus']})",
                     shape="ellipse",
                     style="filled",
                     fillcolor="white",
-                    color="lightgray",
-                    xlabel=syllable_data["Nucleus"]
+                    color="lightgray"
                 )
                 graph.edge(f"Rhyme{syllable_number}", f"Nucleus{syllable_number}", arrowhead="none")
             
@@ -113,12 +110,11 @@ def create_syllable_tree(syllable_data, syllable_number):
             if syllable_data.get("Coda"):
                 graph.node(
                     f"Coda{syllable_number}",
-                    "Coda",
+                    label=f"Coda\n({syllable_data['Coda']})",
                     shape="ellipse",
                     style="filled",
                     fillcolor="white",
-                    color="lightgray",
-                    xlabel=syllable_data["Coda"]
+                    color="lightgray"
                 )
                 graph.edge(f"Rhyme{syllable_number}", f"Coda{syllable_number}", arrowhead="none")
 
