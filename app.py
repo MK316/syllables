@@ -137,7 +137,7 @@ st.markdown("""
    - `/` to mark **both sides** of the nucleus.
    - `//` to mark **syllabic consonants** (e.g., `//n//`).
    - `ˈ` before a syllable to mark **stress**.
-3. Example: `ˈstr/ɛ/.ŋ/θ/.//n//`
+3. Example: `ˈstr/ɛ/ŋ.θ//n//` for [strɛŋθn̩]
 """)
 
 # Input box
