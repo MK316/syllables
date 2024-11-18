@@ -16,7 +16,7 @@ def parse_syllables(syllable_input):
                 parsed_syllables.append({"Onset": onset, "Nucleus_Coda": nucleus_coda, "Syllabic": True, "Stress": is_stressed})
             elif len(parts) == 2:  # No onset, only Syllabic Consonant
                 nucleus_coda = parts[1]
-                parsed_syllables.append({"Onset": \n"", "Nucleus_Coda": nucleus_coda, "Syllabic": True, "Stress": is_stressed})
+                parsed_syllables.append({"Onset": "", "Nucleus_Coda": nucleus_coda, "Syllabic": True, "Stress": is_stressed})
         elif "/" in syllable:  # Handle regular vowels
             parts = syllable.split("/")
             if len(parts) == 3:  # Onset, Nucleus, Coda
@@ -37,43 +37,34 @@ def create_syllable_tree(syllable_data, syllable_number):
     graph = graphviz.Digraph(format="png")
     syllable_color = "orange" if syllable_data.get("Stress") else "white"  # Highlight stressed syllables
 
-    # Create syllable node with light gray outline and the label below
-    graph.node(
-        f"Syllable{syllable_number}",
-        "Syllable",
-        shape="ellipse",
-        style="filled",
-        fillcolor=syllable_color,
-        fontcolor="black",
-        color="lightgray"
-    )
+    graph.node(f"Syllable{syllable_number}", "Syllable", shape="ellipse", style="filled", fillcolor=syllable_color)
 
     # Onset Node
     if syllable_data.get("Onset"):
-        graph.node(f"Onset{syllable_number}", f"Onset: {syllable_data['Onset']}", shape="ellipse", color="white")
+        graph.node(f"Onset{syllable_number}", f"Onset: {syllable_data['Onset']}", shape="ellipse")
         graph.edge(f"Syllable{syllable_number}", f"Onset{syllable_number}", arrowhead="none")
 
     # Rhyme Node
     if syllable_data.get("Syllabic"):  # Syllabic consonant
-        graph.node(f"Rhyme{syllable_number}", "Rhyme", shape="ellipse", color="white")
+        graph.node(f"Rhyme{syllable_number}", "Rhyme", shape="ellipse")
         graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
         
         # Single node for Nucleus and Coda (shared)
-        graph.node(f"Nucleus_Coda{syllable_number}", f"Nucleus/Coda: {syllable_data['Nucleus_Coda']}", shape="ellipse", color="white")
+        graph.node(f"Nucleus_Coda{syllable_number}", f"Nucleus/Coda: {syllable_data['Nucleus_Coda']}", shape="ellipse")
         graph.edge(f"Rhyme{syllable_number}", f"Nucleus_Coda{syllable_number}", arrowhead="none")
     else:
         if syllable_data.get("Nucleus") or syllable_data.get("Coda"):
-            graph.node(f"Rhyme{syllable_number}", "Rhyme", shape="ellipse", color="white")
+            graph.node(f"Rhyme{syllable_number}", "Rhyme", shape="ellipse")
             graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
             
             # Nucleus Node
             if syllable_data.get("Nucleus"):
-                graph.node(f"Nucleus{syllable_number}", f"Nucleus: {syllable_data['Nucleus']}", shape="ellipse", color="white")
+                graph.node(f"Nucleus{syllable_number}", f"Nucleus: {syllable_data['Nucleus']}", shape="ellipse")
                 graph.edge(f"Rhyme{syllable_number}", f"Nucleus{syllable_number}", arrowhead="none")
             
             # Coda Node
             if syllable_data.get("Coda"):
-                graph.node(f"Coda{syllable_number}", f"Coda: {syllable_data['Coda']}", shape="ellipse", color="white")
+                graph.node(f"Coda{syllable_number}", f"Coda: {syllable_data['Coda']}", shape="ellipse")
                 graph.edge(f"Rhyme{syllable_number}", f"Coda{syllable_number}", arrowhead="none")
 
     return graph
