@@ -35,9 +35,9 @@ def parse_syllables(syllable_input):
 # Function to create a syllable tree with Onset, Rhyme, Nucleus, and Coda
 def create_syllable_tree(syllable_data, syllable_number):
     graph = graphviz.Digraph(format="png")
-    syllable_color = "orange" if syllable_data.get("Stress") else "black"  # Highlight stressed syllables
+    syllable_color = "orange" if syllable_data.get("Stress") else "white"  # Highlight stressed syllables
 
-    graph.node(f"Syllable{syllable_number}", "Syllable", shape="ellipse", color=syllable_color, fontcolor=syllable_color)
+    graph.node(f"Syllable{syllable_number}", "Syllable", shape="ellipse", style="filled", fillcolor=syllable_color)
 
     # Onset Node
     if syllable_data.get("Onset"):
@@ -51,7 +51,6 @@ def create_syllable_tree(syllable_data, syllable_number):
         
         # Single node for Nucleus and Coda (shared)
         graph.node(f"Nucleus_Coda{syllable_number}", f"Nucleus/Coda: {syllable_data['Nucleus_Coda']}", shape="ellipse")
-        graph.edge(f"Rhyme{syllable_number}", f"Nucleus_Coda{syllable_number}", arrowhead="none")
         graph.edge(f"Rhyme{syllable_number}", f"Nucleus_Coda{syllable_number}", arrowhead="none")
     else:
         if syllable_data.get("Nucleus") or syllable_data.get("Coda"):
