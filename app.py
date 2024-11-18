@@ -127,7 +127,7 @@ def create_syllable_tree(syllable_data, syllable_number):
     return graph
 
 # Streamlit App
-st.title("Syllable Structure Visualizer")
+st.title("🌳 Syllable Structure Visualizer")
 
 st.markdown("""
 ### Instructions:
