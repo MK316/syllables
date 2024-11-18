@@ -52,7 +52,7 @@ def create_syllable_tree(syllable_data, syllable_number):
     if syllable_data.get("Onset"):
         graph.node(
             f"Onset{syllable_number}",
-            label=f"Onset\n({syllable_data['Onset']})",
+            label=f"Onset\n//{syllable_data['Onset']}//",
             shape="ellipse",
             style="filled",
             fillcolor="white",
@@ -75,7 +75,7 @@ def create_syllable_tree(syllable_data, syllable_number):
         # Single node for Nucleus and Coda (shared)
         graph.node(
             f"Nucleus_Coda{syllable_number}",
-            label=f"Nucleus/Coda\n({syllable_data['Nucleus_Coda']})",
+            label=f"Nucleus/Coda\n//{syllable_data['Nucleus_Coda']}//",
             shape="ellipse",
             style="filled",
             fillcolor="white",
@@ -98,7 +98,7 @@ def create_syllable_tree(syllable_data, syllable_number):
             if syllable_data.get("Nucleus"):
                 graph.node(
                     f"Nucleus{syllable_number}",
-                    label=f"Nucleus\n({syllable_data['Nucleus']})",
+                    label=f"Nucleus\n//{syllable_data['Nucleus']}//",
                     shape="ellipse",
                     style="filled",
                     fillcolor="white",
@@ -110,7 +110,7 @@ def create_syllable_tree(syllable_data, syllable_number):
             if syllable_data.get("Coda"):
                 graph.node(
                     f"Coda{syllable_number}",
-                    label=f"Coda\n({syllable_data['Coda']})",
+                    label=f"Coda\n//{syllable_data['Coda']}//",
                     shape="ellipse",
                     style="filled",
                     fillcolor="white",
