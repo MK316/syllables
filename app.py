@@ -3,13 +3,17 @@ import graphviz
 
 # Function to parse syllable input
 def parse_syllables(syllable_input):
-    syllables = syllable_input.split(".")
+    syllables = syllable_input.split(".")  # Split syllables by `.`
     parsed_syllables = []
     for syllable in syllables:
         if "/" in syllable:
-            onset, rest = syllable.split("/", 1)
-            nucleus = rest[0]
-            coda = rest[1:] if len(rest) > 1 else ""
+            parts = syllable.split("/")
+            if len(parts) == 3:  # Onset, Nucleus, Coda
+                onset, nucleus, coda = parts[0], parts[1], parts[2]
+            elif len(parts) == 2:  # Only Onset and Nucleus or Nucleus and Coda
+                onset, nucleus, coda = parts[0], parts[1], ""
+            else:  # Only Nucleus
+                onset, nucleus, coda = "", parts[1], ""
         else:
             onset, nucleus, coda = "", "", ""
         parsed_syllables.append({"Onset": onset, "Nucleus": nucleus, "Coda": coda})
@@ -20,18 +24,22 @@ def create_syllable_tree(syllable_data):
     graph = graphviz.Digraph(format="png")
     graph.node("Syllable", "Syllable", shape="ellipse")
     
+    # Onset Node
     if syllable_data["Onset"]:
         graph.node("Onset", f"Onset: {syllable_data['Onset']}", shape="ellipse")
         graph.edge("Syllable", "Onset")
     
+    # Rhyme Node
     if syllable_data["Nucleus"] or syllable_data["Coda"]:
         graph.node("Rhyme", "Rhyme", shape="ellipse")
         graph.edge("Syllable", "Rhyme")
         
+        # Nucleus Node
         if syllable_data["Nucleus"]:
             graph.node("Nucleus", f"Nucleus: {syllable_data['Nucleus']}", shape="ellipse")
             graph.edge("Rhyme", "Nucleus")
         
+        # Coda Node
         if syllable_data["Coda"]:
             graph.node("Coda", f"Coda: {syllable_data['Coda']}", shape="ellipse")
             graph.edge("Rhyme", "Coda")
@@ -46,12 +54,12 @@ st.markdown("""
 1. Enter a syllabified word or phrase.
 2. Use:
    - `.` for syllable boundaries.
-   - `/` to mark the nucleus.
-3. Example: `str/ɛ.ŋ/θ.en`
+   - `/` to mark **both sides** of the nucleus.
+3. Example: `str/ɛ/.ŋ/θ/.en/`
 """)
 
 # Input box
-syllable_input = st.text_input("Enter syllabified text:", placeholder="e.g., str/ɛ.ŋ/θ.en")
+syllable_input = st.text_input("Enter syllabified text:", placeholder="e.g., str/ɛ/.ŋ/θ/.en/")
 
 # Generate button
 if st.button("Generate Tree"):
