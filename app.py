@@ -17,19 +17,19 @@ def parse_syllables(syllable_input):
 
 # Function to create a syllable tree
 def create_syllable_tree(syllable_data):
-    graph = graphviz.Digraph()
-    graph.node("Syllable", "Syllable")
+    graph = graphviz.Digraph(format="png")
+    graph.node("Syllable", "Syllable", shape="circle")
     
     if syllable_data["Onset"]:
-        graph.node("Onset", f"Onset: {syllable_data['Onset']}")
+        graph.node("Onset", f"Onset: {syllable_data['Onset']}", shape="ellipse")
         graph.edge("Syllable", "Onset")
     
     if syllable_data["Nucleus"]:
-        graph.node("Nucleus", f"Nucleus: {syllable_data['Nucleus']}")
+        graph.node("Nucleus", f"Nucleus: {syllable_data['Nucleus']}", shape="ellipse")
         graph.edge("Syllable", "Nucleus")
     
     if syllable_data["Coda"]:
-        graph.node("Coda", f"Coda: {syllable_data['Coda']}")
+        graph.node("Coda", f"Coda: {syllable_data['Coda']}", shape="ellipse")
         graph.edge("Syllable", "Coda")
     
     return graph
@@ -57,6 +57,7 @@ if st.button("Generate Tree"):
         for i, syl in enumerate(syllables, start=1):
             st.markdown(f"### Syllable {i}")
             tree = create_syllable_tree(syl)
-            st.graphviz_chart(tree, use_container_width=True)
+            # Display the tree using Streamlit's Graphviz chart
+            st.graphviz_chart(tree)
     else:
         st.error("Please enter a valid syllabified input.")
