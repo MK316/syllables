@@ -52,7 +52,7 @@ def create_syllable_tree(syllable_data, syllable_number):
         fillcolor=syllable_color,
         fontcolor="black",
         color="lightgray",
-        fontsize="12",  # Set font size
+        fontsize="14",  # Set font size
         fontname="Arial"  # Set font style
     )
 
@@ -65,7 +65,7 @@ def create_syllable_tree(syllable_data, syllable_number):
             style="filled",
             fillcolor="white",
             color="lightgray",
-            fontsize="10",  # Set font size
+            fontsize="14",  # Set font size
             fontname="Courier"  # Set font style
         )
         graph.edge(f"Syllable{syllable_number}", f"Onset{syllable_number}", arrowhead="none")
@@ -79,7 +79,7 @@ def create_syllable_tree(syllable_data, syllable_number):
             style="filled",
             fillcolor="white",
             color="lightgray",
-            fontsize="10",  # Set font size
+            fontsize="14",  # Set font size
             fontname="Courier"  # Set font style
         )
         graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
@@ -92,7 +92,7 @@ def create_syllable_tree(syllable_data, syllable_number):
             style="filled",
             fillcolor="white",
             color="lightgray",
-            fontsize="10",  # Set font size
+            fontsize="14",  # Set font size
             fontname="Courier"  # Set font style
         )
         graph.edge(f"Rhyme{syllable_number}", f"Nucleus_Coda{syllable_number}", arrowhead="none")
@@ -105,7 +105,7 @@ def create_syllable_tree(syllable_data, syllable_number):
                 style="filled",
                 fillcolor="white",
                 color="lightgray",
-                fontsize="10",  # Set font size
+                fontsize="14",  # Set font size
                 fontname="Courier"  # Set font style
             )
             graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
@@ -133,7 +133,7 @@ def create_syllable_tree(syllable_data, syllable_number):
                     style="filled",
                     fillcolor="white",
                     color="lightgray",
-                    fontsize="10",  # Set font size
+                    fontsize="14",  # Set font size
                     fontname="Courier"  # Set font style
                 )
                 graph.edge(f"Rhyme{syllable_number}", f"Coda{syllable_number}", arrowhead="none")
