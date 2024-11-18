@@ -31,24 +31,24 @@ def draw_syllable_tree(syllables):
 
             # Add nodes to the graph
             syllable_color = "orange" if is_stressed else "white"
-            subgraph.node(f"syllable_{idx}", "Syllable", style="filled", fillcolor=syllable_color)
+            subgraph.node(f"syllable_{idx}", "Syllable", style="filled", fillcolor=syllable_color, shape="ellipse")
             
             if onset:
-                subgraph.node(f"onset_{idx}", f"Onset: {onset}")
-                subgraph.edge(f"syllable_{idx}", f"onset_{idx}")
+                subgraph.node(f"onset_{idx}", f"Onset: {onset}", shape="ellipse")
+                subgraph.edge(f"syllable_{idx}", f"onset_{idx}", arrowhead="none")
             
-            subgraph.node(f"rhyme_{idx}", "Rhyme")
-            subgraph.edge(f"syllable_{idx}", f"rhyme_{idx}")
+            subgraph.node(f"rhyme_{idx}", "Rhyme", shape="ellipse")
+            subgraph.edge(f"syllable_{idx}", f"rhyme_{idx}", arrowhead="none")
 
             if nucleus == coda and nucleus:  # Syllabic consonant
-                subgraph.node(f"nucleus_coda_{idx}", f"Nucleus/Coda: {nucleus}")
-                subgraph.edge(f"rhyme_{idx}", f"nucleus_coda_{idx}")
+                subgraph.node(f"nucleus_coda_{idx}", f"Nucleus/Coda: {nucleus}", shape="ellipse")
+                subgraph.edge(f"rhyme_{idx}", f"nucleus_coda_{idx}", arrowhead="none")
             else:
                 if nucleus:
-                    subgraph.node(f"nucleus_{idx}", f"Nucleus: {nucleus}")
-                    subgraph.edge(f"rhyme_{idx}", f"nucleus_{idx}")
+                    subgraph.node(f"nucleus_{idx}", f"Nucleus: {nucleus}", shape="ellipse")
+                    subgraph.edge(f"rhyme_{idx}", f"nucleus_{idx}", arrowhead="none")
                 if coda:
-                    subgraph.node(f"coda_{idx}", f"Coda: {coda}")
-                    subgraph.edge(f"rhyme_{idx}", f"coda_{idx}")
+                    subgraph.node(f"coda_{idx}", f"Coda: {coda}", shape="ellipse")
+                    subgraph.edge(f"rhyme_{idx}", f"coda_{idx}", arrowhead="none")
 
     return graph
