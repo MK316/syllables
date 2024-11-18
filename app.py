@@ -1,10 +1,6 @@
-import streamlit as st
-import graphviz
-import os
-
 # Function to parse syllable input
 def parse_syllables(syllable_input):
-    syllables = syllable_input.split(".")  # Split syllables by `.`
+    syllables = syllable_input.split(".")  # Split syllables by .
     parsed_syllables = []
     for syllable in syllables:
         is_stressed = syllable.startswith("ˈ")  # Check for stress marker
@@ -41,7 +37,7 @@ def format_with_slashes(text):
 
 # Function to create a syllable tree with Onset, Rhyme, Nucleus, and Coda
 def create_syllable_tree(syllable_data, syllable_number):
-    graph = graphviz.Digraph(format="svg")
+    graph = graphviz.Digraph(format="png")
     syllable_color = "orange" if syllable_data.get("Stress") else "white"  # Highlight stressed syllables
 
     # Create syllable node
@@ -52,9 +48,7 @@ def create_syllable_tree(syllable_data, syllable_number):
         style="filled",
         fillcolor=syllable_color,
         fontcolor="black",
-        color="lightgray",
-        fontsize="16",  # Adjust font size
-        fontname="Helvetica"  # Adjust font style
+        color="lightgray"
     )
 
     # Onset Node
@@ -65,9 +59,7 @@ def create_syllable_tree(syllable_data, syllable_number):
             shape="ellipse",
             style="filled",
             fillcolor="white",
-            color="lightgray",
-            fontsize="14",  # Adjust font size
-            fontname="Courier"  # Adjust font style
+            color="lightgray"
         )
         graph.edge(f"Syllable{syllable_number}", f"Onset{syllable_number}", arrowhead="none")
 
@@ -79,9 +71,7 @@ def create_syllable_tree(syllable_data, syllable_number):
             shape="ellipse",
             style="filled",
             fillcolor="white",
-            color="lightgray",
-            fontsize="14",  # Adjust font size
-            fontname="Courier"  # Adjust font style
+            color="lightgray"
         )
         graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
         
@@ -92,9 +82,7 @@ def create_syllable_tree(syllable_data, syllable_number):
             shape="ellipse",
             style="filled",
             fillcolor="white",
-            color="lightgray",
-            fontsize="14",  # Adjust font size
-            fontname="Courier"  # Adjust font style
+            color="lightgray"
         )
         graph.edge(f"Rhyme{syllable_number}", f"Nucleus_Coda{syllable_number}", arrowhead="none")
     else:
@@ -105,9 +93,7 @@ def create_syllable_tree(syllable_data, syllable_number):
                 shape="ellipse",
                 style="filled",
                 fillcolor="white",
-                color="lightgray",
-                fontsize="14",  # Adjust font size
-                fontname="Courier"  # Adjust font style
+                color="lightgray"
             )
             graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
             
@@ -119,9 +105,7 @@ def create_syllable_tree(syllable_data, syllable_number):
                     shape="ellipse",
                     style="filled",
                     fillcolor="white",
-                    color="lightgray",
-                    fontsize="14",  # Adjust font size
-                    fontname="Courier"  # Adjust font style
+                    color="lightgray"
                 )
                 graph.edge(f"Rhyme{syllable_number}", f"Nucleus{syllable_number}", arrowhead="none")
             
@@ -133,9 +117,7 @@ def create_syllable_tree(syllable_data, syllable_number):
                     shape="ellipse",
                     style="filled",
                     fillcolor="white",
-                    color="lightgray",
-                    fontsize="14",  # Adjust font size
-                    fontname="Courier"  # Adjust font style
+                    color="lightgray"
                 )
                 graph.edge(f"Rhyme{syllable_number}", f"Coda{syllable_number}", arrowhead="none")
 
@@ -148,11 +130,11 @@ st.markdown("""
 ### Instructions:
 1. Enter a syllabified word or phrase.
 2. Use:
-   - `.` for syllable boundaries.
-   - `/` to mark **both sides** of the nucleus.
-   - `//` to mark **syllabic consonants** (e.g., `//n//`).
-   - `ˈ` before a syllable to mark **stress**.
-3. Example: `ˈstr/ɛ/.ŋ/θ/.//n//`
+   - . for syllable boundaries.
+   - / to mark **both sides** of the nucleus.
+   - // to mark **syllabic consonants** (e.g., //n//).
+   - ˈ before a syllable to mark **stress**.
+3. Example: ˈstr/ɛ/.ŋ/θ/.//n//
 """)
 
 # Input box
@@ -167,8 +149,6 @@ if st.button("Generate Tree"):
             if syl.get("Onset") or syl.get("Nucleus") or syl.get("Coda") or syl.get("Nucleus_Coda"):
                 st.markdown(f"### Syllable {i}")
                 tree = create_syllable_tree(syl, i)
-                filename = f"syllable_tree_{i}.svg"
-                tree.render(filename, format="svg", cleanup=True)
-                st.image(filename)
+                st.graphviz_chart(tree)
     else:
         st.error("Please enter a valid syllabified input.")
