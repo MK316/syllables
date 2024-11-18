@@ -1,6 +1,9 @@
+import streamlit as st
+import graphviz
+
 # Function to parse syllable input
 def parse_syllables(syllable_input):
-    syllables = syllable_input.split(".")  # Split syllables by .
+    syllables = syllable_input.split(".")  # Split syllables by `.`
     parsed_syllables = []
     for syllable in syllables:
         is_stressed = syllable.startswith("ˈ")  # Check for stress marker
@@ -130,11 +133,11 @@ st.markdown("""
 ### Instructions:
 1. Enter a syllabified word or phrase.
 2. Use:
-   - . for syllable boundaries.
-   - / to mark **both sides** of the nucleus.
-   - // to mark **syllabic consonants** (e.g., //n//).
-   - ˈ before a syllable to mark **stress**.
-3. Example: ˈstr/ɛ/.ŋ/θ/.//n//
+   - `.` for syllable boundaries.
+   - `/` to mark **both sides** of the nucleus.
+   - `//` to mark **syllabic consonants** (e.g., `//n//`).
+   - `ˈ` before a syllable to mark **stress**.
+3. Example: `ˈstr/ɛ/.ŋ/θ/.//n//`
 """)
 
 # Input box
