@@ -1,6 +1,7 @@
 import streamlit as st
 import graphviz
 
+# Function to parse syllable input
 def parse_syllables(syllable_input):
     syllables = syllable_input.split(".")  # Split syllables by `.`
     parsed_syllables = []
@@ -10,10 +11,7 @@ def parse_syllables(syllable_input):
             syllable = syllable[1:]  # Remove stress marker for processing
         if "//" in syllable:  # Handle syllabic consonants
             parts = syllable.split("//")
-            if len(parts) == 3:  # Onset, Syllabic Consonant (Nucleus + Coda)
-                onset, nucleus_coda = parts[0], parts[1]
-                parsed_syllables.append({"Onset": onset, "Nucleus_Coda": nucleus_coda, "Syllabic": True, "Stress": is_stressed})
-            elif len(parts) == 2:  # No onset, only Syllabic Consonant
+            if len(parts) == 2:  # No onset, only Syllabic Consonant
                 nucleus_coda = parts[1]
                 parsed_syllables.append({"Onset": "", "Nucleus_Coda": nucleus_coda, "Syllabic": True, "Stress": is_stressed})
         elif "/" in syllable:  # Handle regular vowels
@@ -21,13 +19,9 @@ def parse_syllables(syllable_input):
             if len(parts) == 3:  # Onset, Nucleus, Coda
                 onset, nucleus, coda = parts[0], parts[1], parts[2]
                 parsed_syllables.append({"Onset": onset, "Nucleus": nucleus, "Coda": coda, "Syllabic": False, "Stress": is_stressed})
-            elif len(parts) == 2:  # Only Onset and Nucleus or Nucleus and Coda
-                if parts[0] and parts[1]:  # Onset and Nucleus
-                    onset, nucleus = parts[0], parts[1]
-                    parsed_syllables.append({"Onset": onset, "Nucleus": nucleus, "Coda": "", "Syllabic": False, "Stress": is_stressed})
-                elif parts[1]:  # Only Nucleus
-                    nucleus = parts[1]
-                    parsed_syllables.append({"Onset": "", "Nucleus": nucleus, "Coda": "", "Syllabic": False, "Stress": is_stressed})
+            elif len(parts) == 2:  # Only Onset and Nucleus
+                onset, nucleus = parts[0], parts[1]
+                parsed_syllables.append({"Onset": onset, "Nucleus": nucleus, "Coda": "", "Syllabic": False, "Stress": is_stressed})
             else:  # Only Nucleus
                 nucleus = parts[0]
                 parsed_syllables.append({"Onset": "", "Nucleus": nucleus, "Coda": "", "Syllabic": False, "Stress": is_stressed})
@@ -35,37 +29,61 @@ def parse_syllables(syllable_input):
             parsed_syllables.append({"Onset": "", "Nucleus": "", "Coda": "", "Syllabic": False, "Stress": is_stressed})
     return parsed_syllables
 
+# Function to create a syllable tree with Graphviz
+def create_syllable_tree(syllable_data, syllable_number):
+    graph = graphviz.Digraph(format='png')
+    syllable_color = "orange" if syllable_data.get("Stress") else "white"  # Highlight stressed syllables
+    
+    # Create syllable node
+    graph.node(f"Syllable{syllable_number}", "Syllable", shape="ellipse", style="filled", fillcolor=syllable_color)
+    
+    # Onset Node
+    if syllable_data.get("Onset"):
+        graph.node(f"Onset{syllable_number}", label=f"Onset\n/{syllable_data['Onset']}/", shape="ellipse", style="filled", fillcolor="white")
+        graph.edge(f"Syllable{syllable_number}", f"Onset{syllable_number}", arrowhead="none")
 
-# Create tabs
-tab1, tab2 = st.tabs(["Syllable Tree Generator", "Image Viewer"])
+    # Rhyme Node
+    if syllable_data.get("Syllabic"):  # Syllabic consonant acts as both nucleus and coda
+        graph.node(f"Rhyme{syllable_number}", "Rhyme", shape="ellipse", style="filled", fillcolor="white")
+        graph.edge(f"Syllable{syllable_number}", f"Rhyme{syllable_number}", arrowhead="none")
+        graph.node(f"Nucleus_Coda{syllable_number}", label=f"Nucleus/Coda\n//{syllable_data['Nucleus_Coda']}//", shape="ellipse", style="filled", fillcolor="white")
+        graph.edge(f"Rhyme{syllable_number}", f"Nucleus_Coda{syllable_number}", arrowhead="none")
+    else:
+        if syllable_data.get("Nucleus"):
+            graph.node(f"Nucleus{syllable_number}", label=f"Nucleus\n/{syllable_data['Nucleus']}/", shape="ellipse", style="filled", fillcolor="white")
+            graph.edge(f"Syllable{syllable_number}", f"Nucleus{syllable_number}", arrowhead="none")
+        if syllable_data.get("Coda"):
+            graph.node(f"Coda{syllable_number}", label=f"Coda\n/{syllable_data['Coda']}/", shape="ellipse", style="filled", fillcolor="white")
+            graph.edge(f"Nucleus{syllable_number}", f"Coda{syllable_number}", arrowhead="none")
+            
+    return graph
 
-with tab1:
-    st.header("🌳 Syllable Structure Visualizer")
-    syllable_input = st.text_input("Enter syllabified text using IPA symbols:", placeholder="e.g., ˈstr/ɛ/.ŋ/θ/.//n//")
-    if st.button("Generate Tree", key="generate"):
+# Streamlit App
+st.title("🌳 Syllable Structure Visualizer")
+
+st.markdown("""
+### 🔳 Instructions:
+1. Enter a word using IPA symbols ([Visit IPA online website](https://ipa.typeit.org/))
+
+2. Use:
+   - `.` for syllable boundaries.
+   - `/` to mark **both sides** of the nucleus.
+   - `//` to mark **syllabic consonants** (e.g., `//n//`).
+   - `ˈ` before a syllable to mark **stress**.
+3. Example: `ˈstr/ɛ/ŋ.θ//n//` for [strɛŋθn̩]
+""")
+
+# Input box
+syllable_input = st.text_input("Enter syllabified text:", placeholder="e.g., ˈstr/ɛ/.ŋ/θ/.//n//")
+
+# Generate button
+if st.button("Generate Tree"):
+    if syllable_input:
         syllables = parse_syllables(syllable_input)
         for i, syl in enumerate(syllables, start=1):
-            st.subheader(f"Syllable {i}")
-            tree = create_syllable_tree(syl, i)
-            st.graphviz_chart(tree)
-
-with tab2:
-    st.header("🖼️ Image Viewer")
-    # List of image URLs
-    images = [
-        "https://github.com/MK316/MK-316/blob/main/images/syllables.001.png?raw=true",
-        "https://github.com/MK316/MK-316/blob/main/images/syllables.002.png?raw=true",
-        "https://github.com/MK316/MK-316/blob/main/images/syllables.003.png?raw=true",
-        "https://github.com/MK316/MK-316/blob/main/images/syllables.004.png?raw=true",
-        "https://github.com/MK316/MK-316/blob/main/images/syllables.005.png?raw=true"
-    ]
-
-    # State management for image index
-    if 'current_image_index' not in st.session_state:
-        st.session_state.current_image_index = 0  # Initialize state if not present
-
-    st.image(images[st.session_state.current_image_index], width=500)  # Display the current image
-
-    if st.button("Next Image"):
-        # Increment or loop the image index
-        st.session_state.current_image_index = (st.session_state.current_image_index + 1) % len(images)
+            if syl.get("Onset") or syl.get("Nucleus") or syl.get("Coda") or syl.get("Nucleus_Coda"):
+                st.markdown(f"### Syllable {i}")
+                tree = create_syllable_tree(syl, i)
+                st.graphviz_chart(tree)
+    else:
+        st.error("Please enter a valid syllabified input.")
